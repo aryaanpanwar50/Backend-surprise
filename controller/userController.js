@@ -1,18 +1,18 @@
-const User = require('../models/userModel')
+const User = require('../models/userModel');
 
-const createUser = async(req,res)=>{
-    const{username,email,password,dob} = req.body
+const createUser = async (req, res) => {
+    const { username, email, password, dob } = req.body;
 
-    if(username ==""){
-        res.send("Username cannot be empty")
-    }else if(email==""){
-        res.send("email cannot be empty")
-    }else if(password==""){
-        res.send("password cannot be empty")
-    }else if(dob==""){
-        res.send("dob cannot be empty")
-    }else if(!(8<=password.length>=16)){
-        res.send("Password length should be greater than 8 or less than or equal to 16")
+    if (!username) {
+        return res.status(400).send("Username cannot be empty");
+    } else if (!email) {
+        return res.status(400).send("Email cannot be empty");
+    } else if (!password) {
+        return res.status(400).send("Password cannot be empty");
+    } else if (!dob) {
+        return res.status(400).send("DOB cannot be empty");
+    } else if (password.length < 8 || password.length > 16) {
+        return res.status(400).send("Password length should be between 8 and 16 characters");
     }
 
     const newUser = new User({
@@ -20,13 +20,15 @@ const createUser = async(req,res)=>{
         email,
         password,
         dob
-    })
+    });
 
-    res.status(201).json({message:"User is created"})
-    await newUser.save()
-}
-const showUsers = async(req,res)=>{
-    res.send({User})
-}
+    await newUser.save();
+    res.status(201).json({ message: "User is created" });
+};
 
-module.exports = {createUser,showUsers}
+const showUsers = async (req, res) => {
+   
+    res.status(200).json(User);
+};
+
+module.exports = { createUser, showUsers };
